@@ -1,0 +1,33 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.4.2
+    hooks:
+    # Run the linter.
+    -   id: ruff
+        args: [--fix]
+    # Run the formatter.
+    -   id: ruff-format
+-   repo: https://github.com/python-poetry/poetry
+    rev: 1.7.1
+    hooks:
+    -   id: poetry-check
+        stages: [commit]
+    -   id: poetry-lock
+        stages: [commit]
+        args: ["--check", "--no-update"]
+    -   id: poetry-export
+        stages: [commit]
+        args: ["-f", "requirements.txt", "-o", "requirements.txt"]
+-   repo: local
+    hooks:
+    -   id: pytest-check
+        types: [python]
+        stages: [push]
+        name: pytest-check
+        entry: poetry run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
